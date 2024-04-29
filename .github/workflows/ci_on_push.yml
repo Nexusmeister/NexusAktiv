@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /src/AkticCrawler/
+        working-directory: .\src\AkticCrawler
+
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
