@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.x.x
+
+      - name: Restore dependencies
+        run: dotnet restore src/AktivCrawler/AktivCrawler.sln
           
       - name: Build Application 1
         run: dotnet build src/AktivCrawler/AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
@@ -42,6 +45,9 @@ jobs:
         with:
           dotnet-version: 8.x.x
           
+      - name: Restore dependencies
+        run: dotnet restore src/AktivCrawler/AktivCrawler.sln
+
       - name: Build Application 1
         run: dotnet build src/AktivCrawler/AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
       
