@@ -12,6 +12,9 @@ jobs:
   build_ubuntu:
     name: Build on Ubuntu latest
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/AktivCrawler
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -25,7 +28,7 @@ jobs:
         run: dotnet restore src/AktivCrawler/AktivCrawler.sln
           
       - name: Build Application 1
-        run: dotnet build src/AktivCrawler/AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
+        run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
       
       - name: Build Application 2
         run: dotnet build src/AktivCrawler/AktivManager/AktivManager.csproj --configuration Release --no-restore
