@@ -31,14 +31,17 @@ jobs:
         run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
       
       - name: Build Application 2
-        run: dotnet build src/AktivCrawler/AktivManager/AktivManager.csproj --configuration Release --no-restore
+        run: dotnet build ./AktivManager/AktivManager.csproj --configuration Release --no-restore
       
       - name: Build Application 3
-        run: dotnet build src/AktivCrawler/AktivReader/AktivReader.csproj --configuration Release --no-restore
+        run: dotnet build ./AktivReader/AktivReader.csproj --configuration Release --no-restore
 
   build_windows:
     name: Build on Windows latest
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: src/AktivCrawler
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -49,13 +52,13 @@ jobs:
           dotnet-version: 8.x.x
           
       - name: Restore dependencies
-        run: dotnet restore src/AktivCrawler/AktivCrawler.sln
+        run: dotnet restore ./AktivCrawler.sln
 
       - name: Build Application 1
-        run: dotnet build src/AktivCrawler/AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
+        run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
       
       - name: Build Application 2
-        run: dotnet build src/AktivCrawler/AktivManager/AktivManager.csproj --configuration Release --no-restore
+        run: dotnet build ./AktivManager/AktivManager.csproj --configuration Release --no-restore
       
       - name: Build Application 3
-        run: dotnet build src/AktivCrawler/AktivReader/AktivReader.csproj --configuration Release --no-restore
+        run: dotnet build ./AktivReader/AktivReader.csproj --configuration Release --no-restore
