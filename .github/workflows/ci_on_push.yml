@@ -25,7 +25,7 @@ jobs:
           dotnet-version: 8.x.x
 
       - name: Restore dependencies
-        run: dotnet restore src/AktivCrawler/AktivCrawler.sln
+        run: dotnet restore ./AktivCrawler.sln
           
       - name: Build Application 1
         run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
