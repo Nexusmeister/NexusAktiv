@@ -9,100 +9,106 @@ using Syncfusion.Pdf.Parsing;
 using static System.Net.Mime.MediaTypeNames;
 
 
+var files = Directory.GetFiles("F:\\AktivCrawling");
 
-var output = ExtractTextFromPdf("F:\\Neuer Ordner\\aktiv_40428.pdf");
-
-string[] lines = output.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-//string result = string.Join(Environment.NewLine, lines);
-var linesList = lines.ToList();
-
-var resultList = new List<ReaderResult>();
-
-var vafgOccurence = 0;
-var cutBegin = 0;
-
-// V A F G
-for (var i = 0; i <= lines.Length; i++)
+foreach (var file in files)
 {
-    if (i == lines.Length)
+    var output = ExtractTextFromPdf(file);
+
+    string[] lines = output.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+    //string result = string.Join(Environment.NewLine, lines);
+    var linesList = lines.ToList();
+
+    var resultList = new List<ReaderResult>();
+
+    var vafgOccurence = 0;
+    var cutBegin = 0;
+
+    // V A F G
+    for (var i = 0; i <= lines.Length; i++)
     {
-        var cutEnd = i;
-        var cutLines = lines[cutBegin..cutEnd];
-
-        // Split last item into player and sum values
-        var indexSumStart = cutLines.ToList().IndexOf("MP") + 2;
-
-        resultList.Add(new PlayerReaderResult()
+        if (i == lines.Length)
         {
-            ReadLines = cutLines[..indexSumStart]
-        });
+            var cutEnd = i;
+            var cutLines = lines[cutBegin..cutEnd];
 
-        resultList.Add(new MatchoverviewReaderResult()
+            // Split last item into player and sum values
+            var indexSumStart = cutLines.ToList().IndexOf("MP") + 2;
+
+            resultList.Add(new PlayerReaderResult()
+            {
+                ReadLines = cutLines[..indexSumStart]
+            });
+
+            resultList.Add(new MatchoverviewReaderResult()
+            {
+                ReadLines = cutLines[indexSumStart..]
+            });
+
+            continue;
+        }
+
+        // TODO Zwischen drin kommt noch der Mannschaftsname der Gäste => Sonderfall abfangen
+        // I 
+        if (string.Equals(lines[i], "V")
+            && lines[i + 1] == "A" &&
+            lines[i + 2] == "F" &&
+            lines[i + 3] == "G")
         {
-            ReadLines = cutLines[indexSumStart..]
-        });
+            vafgOccurence++;
+            var cutEnd = i;
 
-        continue;
+            // Wir schneiden den Gastvereinsnamen vom letzten Heimspieler ab
+            if (vafgOccurence == 7)
+            {
+                cutEnd--;
+            }
+
+            var cutLines = lines[cutBegin..cutEnd];
+
+            if (resultList.Count == 0)
+            {
+                resultList.Add(new MetadataReaderResult()
+                {
+                    ReadLines = cutLines
+                });
+            }
+            else
+            {
+                resultList.Add(new PlayerReaderResult
+                {
+                    ReadLines = cutLines
+                });
+            }
+
+            if (resultList.Count(x => x is PlayerReaderResult) == 6)
+            {
+                resultList.Add(new MetadataReaderResult
+                {
+                    ReadLines = lines[cutEnd..i]
+                });
+            }
+
+            cutBegin = i;
+        }
     }
 
-    // TODO Zwischen drin kommt noch der Mannschaftsname der Gäste => Sonderfall abfangen
-    // I 
-    if (string.Equals(lines[i], "V")
-        && lines[i + 1] == "A" &&
-        lines[i + 2] == "F" &&
-        lines[i + 3] == "G")
-    {
-        vafgOccurence++;
-        var cutEnd = i;
+    //var players = new List<PlayerData>();
+    //foreach (var player in resultList)
+    //{
+    //    if (player is not PlayerReaderResult p)
+    //    {
+    //        continue;
+    //    }
+    //    players.Add(ExtractPlayerData(p));
+    //}
 
-        // Wir schneiden den Gastvereinsnamen vom letzten Heimspieler ab
-        if (vafgOccurence == 7)
-        {
-            cutEnd--;
-        }
+    var metadata = resultList.Where(x => x is MetadataReaderResult).Cast<MetadataReaderResult>().ToList();
 
-        var cutLines = lines[cutBegin..cutEnd];
-        
-        if (resultList.Count == 0)
-        {
-            resultList.Add(new MetadataReaderResult()
-            {
-                ReadLines = cutLines
-            });
-        }
-        else
-        {
-            resultList.Add(new PlayerReaderResult
-            {
-                ReadLines = cutLines
-            });
-        }
+    await SaveClubnames(metadata);
 
-        if (resultList.Count(x => x is PlayerReaderResult) == 6)
-        {
-            resultList.Add(new MetadataReaderResult
-            {
-                ReadLines = lines[cutEnd..i]
-            });
-        }
-        
-        cutBegin = i;
-    }
 }
 
-//var players = new List<PlayerData>();
-//foreach (var player in resultList)
-//{
-//    if (player is not PlayerReaderResult p)
-//    {
-//        continue;
-//    }
-//    players.Add(ExtractPlayerData(p));
-//}
-
-var metadata = resultList.Where(x => x is MetadataReaderResult).Cast<MetadataReaderResult>().ToList();
-
-await SaveClubnames(metadata);
 
 
 
@@ -174,6 +180,15 @@ static async Task SaveClubnames(IReadOnlyCollection<MetadataReaderResult> metada
     var clubNames = metadata.Select(x => x.ReadLines!.TakeLast(1).FirstOrDefault()).ToList();
 
     var clubs = await context.Clubs.AsQueryable().ToListAsync();
+
+    // Get all team names
+    // Add a new list
+    // Copy all team names
+    // Remove team tags like I II m w g IIg etc.
+    // Iterate multiple times over teams until no changes happened
+    // Group by Names
+    // Insert Clubs (but check if already exists)
+    // Insert Teams with respective ClubId
 
     foreach (var clubName in clubNames.Where(clubName => !clubs.Exists(x => string.Equals(x.ClubName, clubName))))
     {
