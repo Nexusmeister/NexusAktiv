@@ -1,34 +1,52 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: CI on push
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  build:
-
+  build_ubuntu:
+    name: Build on Ubuntu latest
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: ./src/AkticCrawler/
-        
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Anzeigen der Ordnerstruktur
-      run: ls -R
-      working-directory: ./src/AktivCrawler/
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+          
+      - name: Build Application 1
+        run: dotnet build src/AktivCrawler/AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
+      
+      - name: Build Application 2
+        run: dotnet build src/AktivCrawler/AktivManager/AktivManager.csproj --configuration Release --no-restore
+      
+      - name: Build Application 3
+        run: dotnet build src/AktivCrawler/AktivReader/AktivReader.csproj --configuration Release --no-restore
+
+  build_windows:
+    name: Build on Windows latest
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+          
+      - name: Build Application 1
+        run: dotnet build src/AktivCrawler/AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
+      
+      - name: Build Application 2
+        run: dotnet build src/AktivCrawler/AktivManager/AktivManager.csproj --configuration Release --no-restore
+      
+      - name: Build Application 3
+        run: dotnet build src/AktivCrawler/AktivReader/AktivReader.csproj --configuration Release --no-restore
