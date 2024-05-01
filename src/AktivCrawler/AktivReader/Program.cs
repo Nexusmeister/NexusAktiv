@@ -188,7 +188,7 @@ static async Task SaveClubnames(IReadOnlyCollection<MetadataReaderResult> metada
     // Iterate multiple times over teams until no changes happened
     // Group by Names
     // Insert Clubs (but check if already exists)
-    // Insert Teams with respective ClubId
+    // Insert Teams with respective ClubId (obsolete)
 
     foreach (var clubName in clubNames.Where(clubName => !clubs.Exists(x => string.Equals(x.ClubName, clubName))))
     {
