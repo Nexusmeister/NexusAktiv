@@ -1,5 +1,5 @@
 # AktivCrawler
-This repo is for crawling and processing the data of the WKBV (Württembergischer Kegel- und Bowlingverband e.V.) match service wkbv-aktiv.
+This repo is for crawling and processing the data of the WKBV (Württembergischer Kegler- und Bowlingverband e.V.) match service wkbv-aktiv.
 
 # Why?
 The transparency and usability of the original software is far beyond of good and modern. Historical and deep processing of match data is not possible.
