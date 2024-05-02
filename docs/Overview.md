@@ -11,12 +11,12 @@ The main structure of the software has the following components:
 The crawler tries to retrieve every match report that is available on the website. If it succeeds in finding a report, the service saves it as a file and publishes a notification for the reader service to start its tasks.
 
 ```mermaid
-stateDiagram-v2;
-    [*] --> Iterating;
-    Iterating --> Found;
-    Iterating --> NotFound;
-    NotFound --> Iterating;
-    Found --> SaveFile;
-    SaveFile --> Iterating;
-    
+stateDiagram-v2
+    [*] --> Iterating
+    Iterating --> Found
+    Iterating --> NotFound
+    NotFound --> Iterating
+    Found --> SaveFile
+    SaveFile --> Iterating
+    Iterating --> [*]
 ```
