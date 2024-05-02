@@ -17,6 +17,7 @@ host.ConfigureServices((hostingContext, services) =>
     services.AddMediatR(config =>
     {
         config.Lifetime = ServiceLifetime.Singleton;
+        config.RegisterServicesFromAssemblyContaining<Program>();
     });
 
     services.AddHttpClient<ICrawlerService, CrawlerService>((sp, client) =>

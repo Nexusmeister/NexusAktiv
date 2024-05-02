@@ -1,6 +1,8 @@
 ﻿using System.Threading.Channels;
+using AktivCrawler.Messages;
 using AktivCrawler.Options;
 using AktivCrawler.Services;
+using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -14,6 +16,7 @@ public class CrawlerWorker : BackgroundService
     private readonly IOptions<FilesOptions> _fileoptions;
     private readonly ICrawlerService _crawler;
     private readonly IFileManagerService _fileManager;
+    private readonly IMediator _mediator;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public CrawlerWorker(
@@ -21,13 +24,15 @@ public class CrawlerWorker : BackgroundService
         IOptions<CrawlerOptions> options,
         IOptions<FilesOptions> fileoptions,
         ICrawlerService crawler,
-        IFileManagerService fileManager)
+        IFileManagerService fileManager,
+        IMediator mediator)
     {
         _logger = logger;
         _options = options;
         _fileoptions = fileoptions;
         _crawler = crawler;
         _fileManager = fileManager;
+        _mediator = mediator;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -52,6 +57,11 @@ public class CrawlerWorker : BackgroundService
                         if (stream is not null)
                         {
                             await _fileManager.SaveStreamAsFile(_fileoptions.Value.ArchivePath, filename, stream, stoppingToken);
+                            await _mediator.Publish(new ReportCrawled
+                            {
+                                Id = Guid.NewGuid(),
+                                FileCreatedPath = filename
+                            }, stoppingToken);
                         }
                     }
                 }, stoppingToken);
