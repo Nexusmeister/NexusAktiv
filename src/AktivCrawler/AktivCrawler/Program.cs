@@ -47,7 +47,7 @@ host.ConfigureServices((hostingContext, services) =>
         .Configure<FilesOptions>(hostingContext.Configuration.GetSection(FilesOptions.Options));
 
     services.AddTransient<IFileManagerService, FileManagerService>();
-    services.AddTransient<IReaderService, PdfReaderService>();
+    services.AddTransient<IFileReaderService, PdfReaderService>();
     services.AddTransient<ITextToEntitiesService, TextToEntitiesService>();
 
     services.AddHostedService<CrawlerWorker>();

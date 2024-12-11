@@ -2,7 +2,7 @@
 
 namespace AktivCrawler.Services;
 
-public interface IReaderService
+public interface IFileReaderService
 {
     string ReadData(string filepath);
 }

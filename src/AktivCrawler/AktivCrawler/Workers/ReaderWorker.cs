@@ -9,11 +9,11 @@ namespace AktivCrawler.Workers;
 public class ReaderWorker : BackgroundService//, INotificationHandler<ReportCrawled>
 {
     private readonly ILogger<ReaderWorker> _logger;
-    private readonly IReaderService _readerService;
+    private readonly IFileReaderService _readerService;
     private readonly ITextToEntitiesService _analyzerService;
     private List<ReportCrawled> _todo;
 
-    public ReaderWorker(ILogger<ReaderWorker> logger, IReaderService readerService, ITextToEntitiesService analyzerService)
+    public ReaderWorker(ILogger<ReaderWorker> logger, IFileReaderService readerService, ITextToEntitiesService analyzerService)
     {
         _logger = logger;
         _readerService = readerService;

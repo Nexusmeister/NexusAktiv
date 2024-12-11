@@ -2,7 +2,7 @@
 
 namespace AktivCrawler.Services;
 
-public class PdfReaderService : IReaderService
+public class PdfReaderService : IFileReaderService
 {
     public string ReadData(string filepath)
     {
