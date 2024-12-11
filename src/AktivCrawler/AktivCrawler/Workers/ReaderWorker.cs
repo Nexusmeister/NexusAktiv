@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AktivCrawler.Workers;
 
-public class ReaderWorker : BackgroundService, INotificationHandler<ReportCrawled>
+public class ReaderWorker : BackgroundService//, INotificationHandler<ReportCrawled>
 {
     private readonly ILogger<ReaderWorker> _logger;
     private readonly IReaderService _readerService;

@@ -1,9 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using AktivCrawler;
+using AktivCrawler.Messages;
 using AktivCrawler.Options;
 using AktivCrawler.Services;
 using AktivCrawler.Workers;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,8 @@ host.ConfigureServices((hostingContext, services) =>
         config.Lifetime = ServiceLifetime.Singleton;
         config.RegisterServicesFromAssemblyContaining<Program>();
     });
+
+    
 
     services.AddHttpClient<ICrawlerService, CrawlerService>((sp, client) =>
     {
@@ -43,8 +47,13 @@ host.ConfigureServices((hostingContext, services) =>
         .Configure<FilesOptions>(hostingContext.Configuration.GetSection(FilesOptions.Options));
 
     services.AddTransient<IFileManagerService, FileManagerService>();
+    services.AddTransient<IReaderService, PdfReaderService>();
+    services.AddTransient<ITextToEntitiesService, TextToEntitiesService>();
 
     services.AddHostedService<CrawlerWorker>();
+    //services.AddSingleton<ReaderWorker>();
+    //services.AddSingleton<INotificationHandler<ReportCrawled>>(provider => provider.GetRequiredService<ReaderWorker>());
+    //services.AddHostedService(provider => provider.GetRequiredService<ReaderWorker>()); // Register as hosted service
 }).ConfigureAppConfiguration(config =>
 {
     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);

@@ -49,7 +49,7 @@ public class CrawlerWorker : BackgroundService
 
                 var task = Task.Run(async () =>
                 {
-                    var filename = string.Concat("spielbericht_", search.ToString(), ".pdf");
+                    var filename = string.Concat("aktiv_", search.ToString(), ".pdf");
                     if (!_fileManager.FileExists(Path.Combine(_fileoptions.Value.ArchivePath, filename)))
                     {
                         var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);

@@ -23,6 +23,7 @@ public class FileManagerService(ILogger<FileManagerService> logger) : IFileManag
         _ = await inputStream.ReadAsync(bytesInStream.AsMemory(0, bytesInStream.Length), token);
 
         var memory = new ReadOnlyMemory<byte>(bytesInStream);
+        Directory.CreateDirectory(filePath);
 
         await using (var outputFileStream = new FileStream(path, FileMode.Create))
         {
