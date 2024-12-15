@@ -46,7 +46,7 @@ public class CrawlerWorker : BackgroundService
             for (var i = 0; i < _options.Value.MaxThreads; i++)
             {
                 var search = idToSearch;
-
+                
                 var task = Task.Run(async () =>
                 {
                     var filename = string.Concat("aktiv_", search.ToString(), ".pdf");
@@ -60,7 +60,8 @@ public class CrawlerWorker : BackgroundService
                             await _mediator.Publish(new ReportCrawled
                             {
                                 Id = Guid.NewGuid(),
-                                FileCreatedPath = filename
+                                FileCreatedPath = filename,
+                                SourceSystemId = search
                             }, stoppingToken);
                         }
                     }

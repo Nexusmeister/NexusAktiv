@@ -2,8 +2,9 @@
 
 namespace AktivCrawler.Messages;
 
-public class ReportCrawled : INotification
+public sealed class ReportCrawled : INotification
 {
-    public required Guid Id { get; set; }
-    public required string FileCreatedPath { get; set; }
+    public required Guid Id { get; init; }
+    public required string FileCreatedPath { get; init; }
+    public required int SourceSystemId { get; set; }
 }
