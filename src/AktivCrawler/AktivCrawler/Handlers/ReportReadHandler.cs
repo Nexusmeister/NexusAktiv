@@ -6,9 +6,9 @@ namespace AktivCrawler.Handlers;
 
 public class ReportReadHandler : INotificationHandler<ReportRead>
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ReportReadHandler> _logger;
 
-    public ReportReadHandler(ILogger logger)
+    public ReportReadHandler(ILogger<ReportReadHandler> logger)
     {
         _logger = logger;
     }
