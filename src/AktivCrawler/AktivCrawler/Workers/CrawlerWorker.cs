@@ -50,7 +50,8 @@ public class CrawlerWorker : BackgroundService
                 var task = Task.Run(async () =>
                 {
                     var filename = string.Concat("aktiv_", search.ToString(), ".pdf");
-                    if (!_fileManager.FileExists(Path.Combine(_fileoptions.Value.ArchivePath, filename)))
+                    var fullFilePath = Path.Combine(_fileoptions.Value.ArchivePath, filename);
+                    if (!_fileManager.FileExists(fullFilePath))
                     {
                         var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);
 
@@ -60,7 +61,7 @@ public class CrawlerWorker : BackgroundService
                             await _mediator.Publish(new ReportCrawled
                             {
                                 Id = Guid.NewGuid(),
-                                FileCreatedPath = filename,
+                                FileCreatedPath = fullFilePath,
                                 SourceSystemId = search
                             }, stoppingToken);
                         }
