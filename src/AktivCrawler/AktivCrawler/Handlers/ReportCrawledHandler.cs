@@ -8,12 +8,12 @@ namespace AktivCrawler.Handlers;
 
 public class ReportCrawledHandler : INotificationHandler<ReportCrawled>
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ReportCrawledHandler> _logger;
     private readonly IFileReaderService _readerService;
     private readonly ITextToEntitiesService _analyzerService;
     private readonly IMediator _mediator;
 
-    public ReportCrawledHandler(ILogger logger, IFileReaderService readerService, ITextToEntitiesService analyzerService, IMediator mediator)
+    public ReportCrawledHandler(ILogger<ReportCrawledHandler> logger, IFileReaderService readerService, ITextToEntitiesService analyzerService, IMediator mediator)
     {
         _logger = logger;
         _readerService = readerService;
