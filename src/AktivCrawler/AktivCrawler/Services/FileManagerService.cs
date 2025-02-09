@@ -58,13 +58,6 @@ public sealed class FileManagerService(
         logger.LogInformation("Saved {fileName}", fileName);
     }
 
-    public void GetFilesInDirectory(string path)
-    {
-        var dir = new DirectoryInfo(path);
-        var files = dir.GetFiles();
-        
-    }
-
     public bool ArchiveFile(Guid processId)
     {
         var basepath = options.Value.WorkingDirectory;
