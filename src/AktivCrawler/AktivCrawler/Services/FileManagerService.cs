@@ -19,6 +19,27 @@ public sealed class FileManagerService(
         return true;
     }
 
+    public bool FileExists(string path, string searchTerm)
+    {
+        // First try the simple solution
+        if (FileExists(Path.Combine(path, searchTerm)))
+        {
+            return true;
+        }
+
+        // Second try with the search term
+        var basePath = new DirectoryInfo(path);
+
+        // It is not important if the file got imported one or more times
+        if (basePath.GetFiles($"*{searchTerm}*", SearchOption.AllDirectories).Length > 0)
+        {
+            logger.LogInformation("{gamereportFile} already exists - Can be skipped", path);
+            return true;
+        }
+
+        return false;
+    }
+
     public async Task SaveStreamAsFile(string filePath, string fileName, Stream inputStream, Guid processId, CancellationToken token = default)
     {
         var path = Path.Combine(filePath, fileName);
@@ -35,6 +56,13 @@ public sealed class FileManagerService(
         }
 
         logger.LogInformation("Saved {fileName}", fileName);
+    }
+
+    public void GetFilesInDirectory(string path)
+    {
+        var dir = new DirectoryInfo(path);
+        var files = dir.GetFiles();
+        
     }
 
     public bool ArchiveFile(Guid processId)

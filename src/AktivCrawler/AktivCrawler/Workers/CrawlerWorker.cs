@@ -49,10 +49,10 @@ public class CrawlerWorker : BackgroundService
                 
                 var task = Task.Run(async () =>
                 {
+                    // Every import process gets a unique identifier - will be stored as a reference
                     var processId = Guid.NewGuid();
                     var filename = string.Concat("aktiv_", search.ToString(), "_", processId.ToString(), ".pdf");
-                    var fullFilePath = Path.Combine(_fileoptions.Value.WorkingDirectory, filename);
-                    if (!_fileManager.FileExists(fullFilePath))
+                    if (!_fileManager.FileExists(_fileoptions.Value.ArchivePath, string.Concat("aktiv_", search.ToString())))
                     {
                         var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);
 
@@ -62,7 +62,7 @@ public class CrawlerWorker : BackgroundService
                             await _mediator.Publish(new ReportCrawled
                             {
                                 Id = processId,
-                                FileCreatedPath = fullFilePath,
+                                FileCreatedPath = Path.Combine(_fileoptions.Value.WorkingDirectory, filename),
                                 SourceSystemId = search
                             }, stoppingToken);
                         }
