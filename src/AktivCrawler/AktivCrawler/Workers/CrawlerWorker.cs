@@ -55,6 +55,21 @@ public class CrawlerWorker : BackgroundService
                 break;
             }
 
+            if (idToSearch >= _options.Value.MaxSearchId)
+            {
+                _logger.LogInformation("Crawling ends. Waiting for emptying work directory before stopping the application");
+                while (_fileManager.GetCountOfFiles(_fileoptions.Value.WorkingDirectory) > 0)
+                {
+                    await Task.Delay(2500, stoppingToken);
+                    _logger.LogInformation("Worker is still waiting for completion of processing files");
+                }
+
+                _logger.LogInformation("All files got processed. Shut down after a short pause");
+                await Task.Delay(10000, stoppingToken);
+                _applicationLifetime.StopApplication();
+                break;
+            }
+
             for (var i = 0; i < _options.Value.MaxThreads; i++)
             {
                 var search = idToSearch;

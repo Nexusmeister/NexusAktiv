@@ -91,4 +91,11 @@ public sealed class FileManagerService(
         file.MoveTo(Path.Combine(options.Value.ArchivePath, file.Name));
         return true;
     }
+
+    public int GetCountOfFiles(string path)
+    {
+        var directoryInfo = new DirectoryInfo(path);
+        var getFiles = directoryInfo.GetFiles();
+        return getFiles.Count(x => x is { Exists: true, Attributes: not (FileAttributes.Directory or FileAttributes.Archive) });
+    }
 }

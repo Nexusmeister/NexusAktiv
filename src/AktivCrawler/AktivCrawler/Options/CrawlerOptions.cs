@@ -9,4 +9,5 @@ public class CrawlerOptions
     public required int DelayInMs { get; init; }
     public required int IdToStart { get; init; }
     public required string SubUriPath { get; init; }
+    public required int MaxSearchId { get; init; }
 }
