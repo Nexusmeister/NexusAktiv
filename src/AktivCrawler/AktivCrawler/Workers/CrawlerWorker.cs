@@ -17,6 +17,8 @@ public class CrawlerWorker : BackgroundService
     private readonly ICrawlerService _crawler;
     private readonly IFileManagerService _fileManager;
     private readonly IMediator _mediator;
+    private readonly IOptionsMonitor<ShutdownRequestOptions> _shutdownOptions;
+    private readonly IHostApplicationLifetime _applicationLifetime;
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public CrawlerWorker(
@@ -25,7 +27,9 @@ public class CrawlerWorker : BackgroundService
         IOptions<FilesOptions> fileoptions,
         ICrawlerService crawler,
         IFileManagerService fileManager,
-        IMediator mediator)
+        IMediator mediator,
+        IOptionsMonitor<ShutdownRequestOptions> shutdownOptions,
+        IHostApplicationLifetime applicationLifetime)
     {
         _logger = logger;
         _options = options;
@@ -33,6 +37,8 @@ public class CrawlerWorker : BackgroundService
         _crawler = crawler;
         _fileManager = fileManager;
         _mediator = mediator;
+        _shutdownOptions = shutdownOptions;
+        _applicationLifetime = applicationLifetime;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -42,7 +48,13 @@ public class CrawlerWorker : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            
+            if (_shutdownOptions.CurrentValue.ShutdownRequested)
+            {
+                _logger.LogInformation("Stopping service and application as ShutdownRequest from appsettings got detected");
+                _applicationLifetime.StopApplication();
+                break;
+            }
+
             for (var i = 0; i < _options.Value.MaxThreads; i++)
             {
                 var search = idToSearch;
