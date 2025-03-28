@@ -75,7 +75,14 @@ public class ReportReadHandler(IDbContextFactory<AppDbContext> dbContextFac,
             }
         }
 
-            
+        var teamNames = metadata
+            .SelectMany(x => x.ReadLines ?? [])
+            .ToList()
+            .TakeLast(2)
+            .ToList();
+
+
+
 
         var dt = new List<string>();
         metadata.ForEach(x =>
