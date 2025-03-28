@@ -13,7 +13,7 @@ namespace AktivReader.Database.Configurations
                     {
                         ttb.UseHistoryTable("MSSQL_Clubs_History", "dbo");
                         ttb
-                            .HasPeriodStart("ValidFrom")S
+                            .HasPeriodStart("ValidFrom")
                             .HasColumnName("ValidFrom");
                         ttb
                             .HasPeriodEnd("ValidTo")
