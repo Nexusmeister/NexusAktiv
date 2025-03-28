@@ -1,6 +1,6 @@
 ﻿using AktivCrawler.Database;
 using Microsoft.EntityFrameworkCore;
-using NexusCrawler.Data.Models;
+using NexusCrawler.Domain.Models;
 
 namespace AktivCrawler.Services;
 

@@ -1,7 +1,9 @@
-﻿namespace NexusCrawler.Data.Models;
+﻿namespace NexusCrawler.Domain.Models;
 
-public sealed class League
+public class League
 {
     public int Id { get; set; }
+    public int SeasonId { get; set; }
     public string Name { get; set; }
+    public virtual Season Season { get; set; }
 }

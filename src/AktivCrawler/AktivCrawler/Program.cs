@@ -50,6 +50,7 @@ host.ConfigureServices((hostingContext, services) =>
     services.AddTransient<IFileReaderService, PdfReaderService>();
     services.AddTransient<ITextToEntitiesService, TextToEntitiesService>();
     services.AddTransient<ISeasonsService, SeasonsService>();
+    services.AddTransient<ILeaguesService, LeaguesService>();
 
     services.AddDbContextFactory<AppDbContext>(opt =>
     {

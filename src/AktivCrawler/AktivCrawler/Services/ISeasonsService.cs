@@ -1,4 +1,4 @@
-﻿using NexusCrawler.Data.Models;
+﻿using NexusCrawler.Domain.Models;
 
 namespace AktivCrawler.Services;
 
