@@ -1,11 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using AktivCrawler;
+using AktivCrawler.Database;
 using AktivCrawler.Messages;
 using AktivCrawler.Options;
 using AktivCrawler.Services;
 using AktivCrawler.Workers;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,19 @@ host.ConfigureServices((hostingContext, services) =>
     services.AddTransient<IFileManagerService, FileManagerService>();
     services.AddTransient<IFileReaderService, PdfReaderService>();
     services.AddTransient<ITextToEntitiesService, TextToEntitiesService>();
+    services.AddTransient<ISeasonsService, SeasonsService>();
+
+    services.AddDbContextFactory<AppDbContext>(opt =>
+    {
+        if (hostingContext.HostingEnvironment.IsDevelopment())
+        {
+            opt.UseInMemoryDatabase("NexusCrawlerDb");
+        }
+        else
+        {
+            opt.UseSqlServer(hostingContext.Configuration.GetConnectionString("AppDb"));
+        }
+    });
 
     services.AddHostedService<CrawlerWorker>();
     //services.AddSingleton<ReaderWorker>();

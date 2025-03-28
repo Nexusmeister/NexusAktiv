@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AktivReader", "AktivReader\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AktivManager", "AktivManager\AktivManager.csproj", "{1363917F-2F05-41BF-9CF7-2E9F4A909BAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusCrawler.Data", "NexusCrawler.Data\NexusCrawler.Data.csproj", "{580B4028-6FBC-4A3C-BB3F-E25591CF1F4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusCrawler.Domain", "NexusCrawler.Data\NexusCrawler.Domain.csproj", "{580B4028-6FBC-4A3C-BB3F-E25591CF1F4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
