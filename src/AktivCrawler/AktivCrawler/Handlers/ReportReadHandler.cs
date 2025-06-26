@@ -2,6 +2,7 @@
 using AktivCrawler.Entities;
 using AktivCrawler.Messages;
 using AktivCrawler.Services;
+using AktivCrawler.Services.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ namespace AktivCrawler.Handlers;
 public class ReportReadHandler(IDbContextFactory<AppDbContext> dbContextFac,
     ISeasonsService seasonsService,
     ILeaguesService leaguesService,
+    ITeamsService teamsService,
     ILogger<ReportReadHandler> logger) : INotificationHandler<ReportRead>
 {
     public async Task Handle(ReportRead notification, CancellationToken cancellationToken)
@@ -49,10 +51,6 @@ public class ReportReadHandler(IDbContextFactory<AppDbContext> dbContextFac,
         }
 
         // Next is the league check
-        var leagueIndex = metadata
-                .SelectMany(x => x.ReadLines ?? []).Index()
-                .FirstOrDefault(x => x.Item.Contains("Liga/Klasse")).Index + 1;
-
         var leagueName = metadata
             .SelectMany(x => x.ReadLines ?? []).ToList()
             .SkipWhile(x => !x.Contains("Liga/Klasse"))
@@ -82,7 +80,17 @@ public class ReportReadHandler(IDbContextFactory<AppDbContext> dbContextFac,
             .ToList();
 
 
+        foreach (var teamName in teamNames)
+        {
+            var team = await teamsService.GetTeamByNameAsync(teamName, cancellationToken);
 
+            if (team is null)
+            {
+                logger.LogWarning("Team {teamName} cannot be found. Try adding it.", teamName);
+
+                team = await teamsService.InsertTeamAsync(teamName, null, cancellationToken);
+            }
+        }
 
         var dt = new List<string>();
         metadata.ForEach(x =>

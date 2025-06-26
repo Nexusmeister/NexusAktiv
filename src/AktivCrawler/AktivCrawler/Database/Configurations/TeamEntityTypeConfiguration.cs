@@ -12,6 +12,10 @@ public class TeamEntityTypeConfiguration : IEntityTypeConfiguration<Team>
             .HasName("PK_Teams")
             .IsClustered();
 
+        builder.Property(e => e.Id)
+            .UseIdentityColumn()
+            .ValueGeneratedOnAdd();
+
         builder.Property(e => e.Name)
             .HasMaxLength(50)
             .IsRequired();

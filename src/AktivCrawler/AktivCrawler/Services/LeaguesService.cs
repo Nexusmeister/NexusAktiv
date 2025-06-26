@@ -39,7 +39,8 @@ public class LeaguesService(IDbContextFactory<AppDbContext> dbContextFactory) : 
 
         dbContext.Leagues.Add(leagueToInsert);
         var result = await dbContext.SaveChangesAsync(cancellationToken);
-
+        // Just for referencing
+        leagueToInsert.Season = refSeason;
         return result > 0 ? leagueToInsert : null;
     }
 }
