@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Nex.AktivWinner.Crawler.Database;
 using Nex.AktivWinner.Crawler.Messages;
 using Nex.AktivWinner.Crawler.Options;
 using Nex.AktivWinner.Crawler.Services;
@@ -16,6 +18,7 @@ public class AktivCrawlerWorker : BackgroundService
     private readonly IFileManagerService _fileManager;
     private readonly IFileReaderService _fileReader;
     private readonly IMediator _mediator;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
     private readonly IOptionsMonitor<ShutdownRequestOptions> _shutdownOptions;
     private readonly IHostApplicationLifetime _applicationLifetime;
 
@@ -27,6 +30,7 @@ public class AktivCrawlerWorker : BackgroundService
         IFileManagerService fileManager,
         IFileReaderService fileReader,
         IMediator mediator,
+        IDbContextFactory<AppDbContext> dbContextFactory,
         IOptionsMonitor<ShutdownRequestOptions> shutdownOptions,
         IHostApplicationLifetime applicationLifetime)
     {
@@ -36,6 +40,7 @@ public class AktivCrawlerWorker : BackgroundService
         _fileManager = fileManager;
         _fileReader = fileReader;
         _mediator = mediator;
+        _dbContextFactory = dbContextFactory;
         _shutdownOptions = shutdownOptions;
         _applicationLifetime = applicationLifetime;
     }
@@ -68,20 +73,27 @@ public class AktivCrawlerWorker : BackgroundService
 
                 var task = Task.Run(async () =>
                 {
-                    // Every import process gets a unique identifier - will be stored as a reference
-                    var processId = Guid.NewGuid();
-                    var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);
+                    await using var dbContext = await _dbContextFactory.CreateDbContextAsync(stoppingToken);
+                    var matchFound = await dbContext.Matches.AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.SourceSystemId == search, stoppingToken);
 
-                    if (stream is not null)
+                    if (matchFound is null)
                     {
-                        var content = _fileReader.ReadData(stream);
+                        // Every import process gets a unique identifier - will be stored as a reference
+                        var processId = Guid.NewGuid();
+                        var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);
 
-                        await _mediator.Publish(new ReportCrawled
+                        if (stream is not null)
                         {
-                            Id = processId,
-                            SourceSystemId = search,
-                            ReportContent = content
-                        }, stoppingToken);
+                            var content = _fileReader.ReadData(stream);
+
+                            await _mediator.Publish(new ReportCrawled
+                            {
+                                Id = processId,
+                                SourceSystemId = search,
+                                ReportContent = content
+                            }, stoppingToken);
+                        }
                     }
                 }, stoppingToken);
                 taskList.Add(task);
