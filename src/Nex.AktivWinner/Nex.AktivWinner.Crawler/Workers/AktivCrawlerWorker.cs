@@ -8,9 +8,9 @@ using Nex.AktivWinner.Crawler.Services;
 
 namespace Nex.AktivWinner.Crawler.Workers;
 
-public class CrawlerWorker : BackgroundService
+public class AktivCrawlerWorker : BackgroundService
 {
-    private readonly ILogger<CrawlerWorker> _logger;
+    private readonly ILogger<AktivCrawlerWorker> _logger;
     private readonly IOptions<CrawlerOptions> _options;
     private readonly ICrawlerService _crawler;
     private readonly IFileManagerService _fileManager;
@@ -20,8 +20,8 @@ public class CrawlerWorker : BackgroundService
     private readonly IHostApplicationLifetime _applicationLifetime;
 
     // ReSharper disable once ConvertToPrimaryConstructor
-    public CrawlerWorker(
-        ILogger<CrawlerWorker> logger,
+    public AktivCrawlerWorker(
+        ILogger<AktivCrawlerWorker> logger,
         IOptions<CrawlerOptions> options,
         ICrawlerService crawler,
         IFileManagerService fileManager,

@@ -62,7 +62,7 @@ host.ConfigureServices((hostingContext, services) =>
         }
     });
 
-    services.AddHostedService<CrawlerWorker>();
+    services.AddHostedService<AktivCrawlerWorker>();
     //services.AddSingleton<ReaderWorker>();
     //services.AddSingleton<INotificationHandler<ReportCrawled>>(provider => provider.GetRequiredService<ReaderWorker>());
     //services.AddHostedService(provider => provider.GetRequiredService<ReaderWorker>()); // Register as hosted service
