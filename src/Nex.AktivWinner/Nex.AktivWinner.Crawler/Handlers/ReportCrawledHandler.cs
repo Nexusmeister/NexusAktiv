@@ -22,11 +22,10 @@ public class ReportCrawledHandler : INotificationHandler<ReportCrawled>
 
     public async Task Handle(ReportCrawled notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("{guid} / {filename} is ready for processing", notification.Id, notification.FileCreatedPath);
+        _logger.LogInformation("{guid} is ready for processing", notification.Id);
         _logger.LogInformation("Start processing {guid}", notification.Id);
 
-        var pdfcontent = _readerService.ReadData(notification.FileCreatedPath);
-        var readerResult = _analyzerService.GetEntitiesFromText(pdfcontent);
+        var readerResult = _analyzerService.GetEntitiesFromText(notification.ReportContent);
 
         _logger.LogDebug("Report {guid} got read from file", notification.Id);
         await _mediator.Publish(new ReportRead

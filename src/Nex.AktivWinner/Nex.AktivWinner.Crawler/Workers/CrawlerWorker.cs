@@ -92,7 +92,6 @@ public class CrawlerWorker : BackgroundService
                             await _mediator.Publish(new ReportCrawled
                             {
                                 Id = processId,
-                                FileCreatedPath = Path.Combine(_fileoptions.Value.WorkingDirectory, filename),
                                 SourceSystemId = search,
                                 ReportContent = content
                             }, stoppingToken);
