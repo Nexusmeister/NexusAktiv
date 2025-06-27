@@ -9,11 +9,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Season> Seasons { get; set; }
     public DbSet<League> Leagues { get; set; }
     public DbSet<Team> Teams { get; set; }
+    public DbSet<Match> Matches { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new LeagueEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new SeasonEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TeamEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new MatchEntityTypeConfiguration());
     }
 }
