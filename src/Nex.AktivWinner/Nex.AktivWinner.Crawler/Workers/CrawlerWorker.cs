@@ -12,7 +12,6 @@ public class CrawlerWorker : BackgroundService
 {
     private readonly ILogger<CrawlerWorker> _logger;
     private readonly IOptions<CrawlerOptions> _options;
-    private readonly IOptions<FilesOptions> _fileoptions;
     private readonly ICrawlerService _crawler;
     private readonly IFileManagerService _fileManager;
     private readonly IFileReaderService _fileReader;
@@ -24,7 +23,6 @@ public class CrawlerWorker : BackgroundService
     public CrawlerWorker(
         ILogger<CrawlerWorker> logger,
         IOptions<CrawlerOptions> options,
-        IOptions<FilesOptions> fileoptions,
         ICrawlerService crawler,
         IFileManagerService fileManager,
         IFileReaderService fileReader,
@@ -34,7 +32,6 @@ public class CrawlerWorker : BackgroundService
     {
         _logger = logger;
         _options = options;
-        _fileoptions = fileoptions;
         _crawler = crawler;
         _fileManager = fileManager;
         _fileReader = fileReader;
@@ -59,14 +56,7 @@ public class CrawlerWorker : BackgroundService
 
             if (idToSearch >= _options.Value.MaxSearchId)
             {
-                _logger.LogInformation("Crawling ends. Waiting for emptying work directory before stopping the application");
-                while (_fileManager.GetCountOfFiles(_fileoptions.Value.WorkingDirectory) > 0)
-                {
-                    await Task.Delay(2500, stoppingToken);
-                    _logger.LogInformation("Worker is still waiting for completion of processing files");
-                }
-
-                _logger.LogInformation("All files got processed. Shut down after a short pause");
+                _logger.LogInformation("All reports got processed. Shut down after a short pause");
                 await Task.Delay(10000, stoppingToken);
                 _applicationLifetime.StopApplication();
                 break;
@@ -75,27 +65,23 @@ public class CrawlerWorker : BackgroundService
             for (var i = 0; i < _options.Value.MaxThreads; i++)
             {
                 var search = idToSearch;
-                
+
                 var task = Task.Run(async () =>
                 {
                     // Every import process gets a unique identifier - will be stored as a reference
                     var processId = Guid.NewGuid();
-                    var filename = string.Concat("aktiv_", search.ToString(), "_", processId.ToString(), ".pdf");
-                    if (!_fileManager.FileExists(_fileoptions.Value.ArchivePath, string.Concat("aktiv_", search.ToString())))
+                    var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);
+
+                    if (stream is not null)
                     {
-                        var stream = await _crawler.RequestMatchReportAsync(search, stoppingToken);
+                        var content = _fileReader.ReadData(stream);
 
-                        if (stream is not null)
+                        await _mediator.Publish(new ReportCrawled
                         {
-                            var content = _fileReader.ReadData(stream);
-
-                            await _mediator.Publish(new ReportCrawled
-                            {
-                                Id = processId,
-                                SourceSystemId = search,
-                                ReportContent = content
-                            }, stoppingToken);
-                        }
+                            Id = processId,
+                            SourceSystemId = search,
+                            ReportContent = content
+                        }, stoppingToken);
                     }
                 }, stoppingToken);
                 taskList.Add(task);
@@ -106,6 +92,6 @@ public class CrawlerWorker : BackgroundService
             await Task.WhenAll([.. taskList]);
             taskList.Clear();
         }
-         
+
     }
 }

@@ -41,7 +41,6 @@ host.ConfigureServices((hostingContext, services) =>
 
 
     services.Configure<CrawlerOptions>(hostingContext.Configuration.GetSection(CrawlerOptions.Options))
-        .Configure<FilesOptions>(hostingContext.Configuration.GetSection(FilesOptions.Options))
         .Configure<ShutdownRequestOptions>(hostingContext.Configuration.GetSection(ShutdownRequestOptions.Options));
 
     services.AddTransient<IFileManagerService, FileManagerService>();

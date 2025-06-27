@@ -5,8 +5,7 @@ using Nex.AktivWinner.Crawler.Options;
 namespace Nex.AktivWinner.Crawler.Services;
 
 public sealed class FileManagerService(
-    ILogger<FileManagerService> logger,
-    IOptions<FilesOptions> options) : IFileManagerService
+    ILogger<FileManagerService> logger) : IFileManagerService
 {
     public bool FileExists(string path)
     {
@@ -56,40 +55,6 @@ public sealed class FileManagerService(
         }
 
         logger.LogInformation("Saved {fileName}", fileName);
-    }
-
-    public bool ArchiveFile(Guid processId)
-    {
-        var basepath = options.Value.WorkingDirectory;
-        var dirInfo = new DirectoryInfo(options.Value.WorkingDirectory);
-
-        if (!dirInfo.Exists)
-        {
-            logger.LogWarning("Path {filePath} was not found!", options.Value.WorkingDirectory);
-            return false;
-        }
-
-        var files = dirInfo.GetFiles($"*{processId.ToString()}*", SearchOption.AllDirectories);
-        switch (files.Length)
-        {
-            case 0:
-                logger.LogWarning("File for process {processId} was not found and cannot be archived", processId);
-                return false;
-            case > 1:
-                logger.LogWarning("Multiple files with process {processId} was found. Check errors in the preceding processes.", processId);
-                return false;
-        }
-
-        var file = files[0];
-        if (!file.Exists)
-        {
-            logger.LogWarning("File for process {processId} was not found!", processId);
-            return false;
-        }
-
-        Directory.CreateDirectory(options.Value.ArchivePath);
-        file.MoveTo(Path.Combine(options.Value.ArchivePath, file.Name));
-        return true;
     }
 
     public int GetCountOfFiles(string path)
