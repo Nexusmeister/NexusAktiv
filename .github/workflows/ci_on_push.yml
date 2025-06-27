@@ -36,7 +36,7 @@ jobs:
       - name: Build Application 1
         run: dotnet build ./Nex.AktivWinner.Crawler/Nex.AktivWinner.Crawler.csproj --configuration Release --no-restore
       
-      - name: Build Application 3
+      - name: Build Application 2
         run: dotnet build ./Nex.AktivWinner.Reader/Nex.AktivWinner.Reader.csproj --configuration Release --no-restore
 
   build_windows:
@@ -58,7 +58,7 @@ jobs:
         run: dotnet restore
 
       - name: Build Application 1
-        run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
+        run: dotnet build ./Nex.AktivWinner.Crawler/Nex.AktivWinner.Crawler.csproj --configuration Release --no-restore
       
-      - name: Build Application 3
-        run: dotnet build ./AktivReader/AktivReader.csproj --configuration Release --no-restore
+      - name: Build Application 2
+        run: dotnet build ./Nex.AktivWinner.Reader/Nex.AktivWinner.Reader.csproj --configuration Release --no-restore
