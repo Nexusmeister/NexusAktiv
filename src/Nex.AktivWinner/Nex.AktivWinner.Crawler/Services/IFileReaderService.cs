@@ -3,4 +3,5 @@
 public interface IFileReaderService
 {
     string ReadData(string filepath);
+    string ReadData(Stream stream);
 }

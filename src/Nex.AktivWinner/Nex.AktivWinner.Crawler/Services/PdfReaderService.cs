@@ -1,4 +1,5 @@
 ﻿using Syncfusion.Pdf.Parsing;
+using System.IO;
 
 namespace Nex.AktivWinner.Crawler.Services;
 
@@ -6,14 +7,20 @@ public class PdfReaderService : IFileReaderService
 {
     public string ReadData(string filepath)
     {
-        var pdftext = ExtractTextFromPdf(filepath);
+        var inputPdfStream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var pdftext = ExtractTextFromPdf(inputPdfStream);
         return pdftext;
     }
 
-    private static string ExtractTextFromPdf(string path)
+    public string ReadData(Stream stream)
     {
-        var inputPdfStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        var loadedDocument = new PdfLoadedDocument(inputPdfStream);
+        var pdftext = ExtractTextFromPdf(stream);
+        return pdftext;
+    }
+
+    private static string ExtractTextFromPdf(Stream stream)
+    {
+        using var loadedDocument = new PdfLoadedDocument(stream);
 
         // Dead pdf
         if (loadedDocument.Pages.Count == 0)
