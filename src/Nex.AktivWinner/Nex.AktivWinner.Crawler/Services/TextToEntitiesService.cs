@@ -7,7 +7,6 @@ public class TextToEntitiesService : ITextToEntitiesService
     public List<ReaderResult> GetEntitiesFromText(string linesRead)
     {
         var lines = linesRead.Split(["\r\n"], StringSplitOptions.RemoveEmptyEntries);
-        var linesList = lines.ToList();
 
         var resultList = new List<ReaderResult>();
 
