@@ -1,0 +1,33 @@
+# Use postgres/example user/password credentials
+name: nexaktivwinner
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    volumes:
+      - db-data:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: AktivWinnerDb
+    networks:
+      - nexaktivwinner-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - nexaktivwinner-network
+  
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  nexaktivwinner-network:
+    driver: bridge
