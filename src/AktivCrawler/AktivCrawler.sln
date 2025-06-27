@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AktivCrawler", "AktivCrawle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AktivReader", "AktivReader\AktivReader.csproj", "{193F3BCF-45DB-41F4-A00A-715DE034E091}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AktivManager", "AktivManager\AktivManager.csproj", "{1363917F-2F05-41BF-9CF7-2E9F4A909BAE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusCrawler.Domain", "NexusCrawler.Data\NexusCrawler.Domain.csproj", "{580B4028-6FBC-4A3C-BB3F-E25591CF1F4C}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{193F3BCF-45DB-41F4-A00A-715DE034E091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{193F3BCF-45DB-41F4-A00A-715DE034E091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{193F3BCF-45DB-41F4-A00A-715DE034E091}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1363917F-2F05-41BF-9CF7-2E9F4A909BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1363917F-2F05-41BF-9CF7-2E9F4A909BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1363917F-2F05-41BF-9CF7-2E9F4A909BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1363917F-2F05-41BF-9CF7-2E9F4A909BAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{580B4028-6FBC-4A3C-BB3F-E25591CF1F4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{580B4028-6FBC-4A3C-BB3F-E25591CF1F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{580B4028-6FBC-4A3C-BB3F-E25591CF1F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
