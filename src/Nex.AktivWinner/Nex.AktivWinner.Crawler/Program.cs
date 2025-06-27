@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Nex.AktivWinner.Crawler.Database;
 using Nex.AktivWinner.Crawler.Options;
 using Nex.AktivWinner.Crawler.Services;
+using Nex.AktivWinner.Crawler.Services.Implementations;
+using Nex.AktivWinner.Crawler.Services.Interfaces;
 using Nex.AktivWinner.Crawler.Workers;
 
 var host = Host.CreateDefaultBuilder(args);
@@ -47,6 +49,7 @@ host.ConfigureServices((hostingContext, services) =>
     services.AddTransient<ITextToEntitiesService, TextToEntitiesService>();
     services.AddTransient<ISeasonsService, SeasonsService>();
     services.AddTransient<ILeaguesService, LeaguesService>();
+    services.AddTransient<ITeamsService, TeamsService>();
 
     services.AddDbContextFactory<AppDbContext>(opt =>
     {
