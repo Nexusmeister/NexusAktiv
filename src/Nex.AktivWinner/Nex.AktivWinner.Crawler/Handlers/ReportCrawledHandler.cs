@@ -5,29 +5,20 @@ using Nex.AktivWinner.Crawler.Services;
 
 namespace Nex.AktivWinner.Crawler.Handlers;
 
-public class ReportCrawledHandler : INotificationHandler<ReportCrawled>
+public class ReportCrawledHandler(
+    ILogger<ReportCrawledHandler> logger,
+    ITextToEntitiesService analyzerService,
+    IMediator mediator)
+    : INotificationHandler<ReportCrawled>
 {
-    private readonly ILogger<ReportCrawledHandler> _logger;
-    private readonly IFileReaderService _readerService;
-    private readonly ITextToEntitiesService _analyzerService;
-    private readonly IMediator _mediator;
-
-    public ReportCrawledHandler(ILogger<ReportCrawledHandler> logger, IFileReaderService readerService, ITextToEntitiesService analyzerService, IMediator mediator)
-    {
-        _logger = logger;
-        _readerService = readerService;
-        _analyzerService = analyzerService;
-        _mediator = mediator;
-    }
-
     public async Task Handle(ReportCrawled notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Start processing {guid}", notification.Id);
+        logger.LogInformation("Start processing {guid}", notification.Id);
 
-        var readerResult = _analyzerService.GetEntitiesFromText(notification.ReportContent);
+        var readerResult = analyzerService.GetEntitiesFromText(notification.ReportContent);
 
-        _logger.LogDebug("Entities from Report {guid} got determined", notification.Id);
-        await _mediator.Publish(new ReportRead
+        logger.LogDebug("Entities from Report {guid} got determined", notification.Id);
+        await mediator.Publish(new ReportRead
         {
             Id = notification.Id,
             SourceSystemId = notification.SourceSystemId,
