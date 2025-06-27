@@ -15,7 +15,7 @@ public class TeamsService(IDbContextFactory<AppDbContext> dbContextFactory) : IT
         return team;
     }
 
-    public async Task<Team> InsertTeamAsync(string name, int? clubId, CancellationToken cancellationToken = default)
+    public async Task<Team?> InsertTeamAsync(string name, int? clubId, CancellationToken cancellationToken = default)
     {
         var team = await GetTeamByNameAsync(name, cancellationToken);
 
@@ -31,7 +31,8 @@ public class TeamsService(IDbContextFactory<AppDbContext> dbContextFactory) : IT
         var dbContext = await dbContextFactory.CreateDbContextAsync(cancellationToken);
         dbContext.Teams.Add(team);
 
-        throw new NotImplementedException();
+        var result = await dbContext.SaveChangesAsync(cancellationToken);
 
+        return result > 0 ? team : null;
     }
 }
