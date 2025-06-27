@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: src/AktivCrawler
+        working-directory: src/Nex.AktivWinner
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -31,23 +31,20 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore ./AktivCrawler.sln
+        run: dotnet restore
           
       - name: Build Application 1
-        run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
-      
-      - name: Build Application 2
-        run: dotnet build ./AktivManager/AktivManager.csproj --configuration Release --no-restore
+        run: dotnet build ./Nex.AktivWinner.Crawler/Nex.AktivWinner.Crawler.csproj --configuration Release --no-restore
       
       - name: Build Application 3
-        run: dotnet build ./AktivReader/AktivReader.csproj --configuration Release --no-restore
+        run: dotnet build ./Nex.AktivWinner.Reader/Nex.AktivWinner.Reader.csproj --configuration Release --no-restore
 
   build_windows:
     name: Build on Windows latest
     runs-on: windows-latest
     defaults:
       run:
-        working-directory: src/AktivCrawler
+        working-directory: src/Nex.AktivWinner
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -58,13 +55,10 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Restore dependencies
-        run: dotnet restore ./AktivCrawler.sln
+        run: dotnet restore
 
       - name: Build Application 1
         run: dotnet build ./AktivCrawler/AktivCrawler.csproj --configuration Release --no-restore
-      
-      - name: Build Application 2
-        run: dotnet build ./AktivManager/AktivManager.csproj --configuration Release --no-restore
       
       - name: Build Application 3
         run: dotnet build ./AktivReader/AktivReader.csproj --configuration Release --no-restore
