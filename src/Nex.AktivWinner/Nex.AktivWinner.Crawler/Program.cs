@@ -54,7 +54,7 @@ host.ConfigureServices((hostingContext, services) =>
     {
         if (hostingContext.HostingEnvironment.IsDevelopment())
         {
-            opt.UseInMemoryDatabase("NexusCrawlerDb");
+            opt.UseInMemoryDatabase("NexCrawlerDb");
         }
         else
         {
