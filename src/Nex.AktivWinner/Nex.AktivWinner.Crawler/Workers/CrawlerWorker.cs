@@ -15,6 +15,7 @@ public class CrawlerWorker : BackgroundService
     private readonly IOptions<FilesOptions> _fileoptions;
     private readonly ICrawlerService _crawler;
     private readonly IFileManagerService _fileManager;
+    private readonly IFileReaderService _fileReader;
     private readonly IMediator _mediator;
     private readonly IOptionsMonitor<ShutdownRequestOptions> _shutdownOptions;
     private readonly IHostApplicationLifetime _applicationLifetime;
@@ -26,6 +27,7 @@ public class CrawlerWorker : BackgroundService
         IOptions<FilesOptions> fileoptions,
         ICrawlerService crawler,
         IFileManagerService fileManager,
+        IFileReaderService fileReader,
         IMediator mediator,
         IOptionsMonitor<ShutdownRequestOptions> shutdownOptions,
         IHostApplicationLifetime applicationLifetime)
@@ -35,6 +37,7 @@ public class CrawlerWorker : BackgroundService
         _fileoptions = fileoptions;
         _crawler = crawler;
         _fileManager = fileManager;
+        _fileReader = fileReader;
         _mediator = mediator;
         _shutdownOptions = shutdownOptions;
         _applicationLifetime = applicationLifetime;
@@ -84,12 +87,14 @@ public class CrawlerWorker : BackgroundService
 
                         if (stream is not null)
                         {
-                            await _fileManager.SaveStreamAsFile(_fileoptions.Value.WorkingDirectory, filename, stream, processId, stoppingToken);
+                            var content = _fileReader.ReadData(stream);
+
                             await _mediator.Publish(new ReportCrawled
                             {
                                 Id = processId,
                                 FileCreatedPath = Path.Combine(_fileoptions.Value.WorkingDirectory, filename),
-                                SourceSystemId = search
+                                SourceSystemId = search,
+                                ReportContent = content
                             }, stoppingToken);
                         }
                     }
