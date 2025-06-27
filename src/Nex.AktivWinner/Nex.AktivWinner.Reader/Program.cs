@@ -1,13 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.Text;
-using AktivReader;
-using AktivReader.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Nex.AktivWinner.Reader;
+using Nex.AktivWinner.Reader.Database;
 using Syncfusion.Pdf;
 using Syncfusion.Pdf.Parsing;
-using static System.Net.Mime.MediaTypeNames;
 
 
 var files = Directory.GetFiles("F:\\AktivCrawling");
