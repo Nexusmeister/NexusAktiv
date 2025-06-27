@@ -54,11 +54,7 @@ host.ConfigureServices((hostingContext, services) =>
     {
         if (hostingContext.HostingEnvironment.IsDevelopment())
         {
-            opt.UseInMemoryDatabase("NexCrawlerDb");
-        }
-        else
-        {
-            opt.UseSqlServer(hostingContext.Configuration.GetConnectionString("AppDb"));
+            opt.UseNpgsql(hostingContext.Configuration.GetConnectionString("AppDb"));
         }
     });
 
